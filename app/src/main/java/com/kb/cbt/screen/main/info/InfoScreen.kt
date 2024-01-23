@@ -7,12 +7,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kb.cbt.composable.BackOnPressed
 import com.kb.cbt.screen.main.quiz.InfoViewModel
 
 @Composable
 fun InfoScreen(
     viewModel: InfoViewModel = hiltViewModel(),
 ) {
+    BackOnPressed()
+
     Box(modifier = Modifier.fillMaxSize()) {
         Text(modifier = Modifier.align(Alignment.Center), text = "InfoScreen")
     }

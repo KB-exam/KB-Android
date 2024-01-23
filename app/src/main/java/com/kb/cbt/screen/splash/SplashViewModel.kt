@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(): ViewModel() {
-    fun onAppStart(openAndPopUp: (String, String) -> Unit) {
-        openAndPopUp("LoginScreen", "SplashScreen")
+    fun onAppStart(openAndPopUp: (String) -> Unit) {
+        openAndPopUp("LoginScreen")
     }
 }

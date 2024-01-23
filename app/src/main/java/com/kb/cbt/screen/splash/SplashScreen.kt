@@ -21,7 +21,7 @@ private const val SPLASH_TIMEOUT = 2000L
 
 @Composable
 fun SplashScreen(
-    openAndPopUp: (String, String) -> Unit,
+    openAndPopUp: (String) -> Unit,
     viewModel: SplashViewModel = hiltViewModel()
 ) {
     Column(

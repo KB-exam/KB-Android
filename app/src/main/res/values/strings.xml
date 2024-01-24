@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">kb_android</string>
+
+
+    <!-- Login -->
+    <string name="login_error_password_invalid">비밀번호가 올바르지 않습니다.</string>
+    <string name="login_error_no_user">직원 번호가 올바르지 않습니다.</string>
+    <string name="login_error">데이터 베이스 통신 에러</string>
 </resources>

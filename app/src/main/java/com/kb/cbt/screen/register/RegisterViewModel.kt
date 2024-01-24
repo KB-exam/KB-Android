@@ -60,11 +60,16 @@ class RegisterViewModel @Inject constructor(
         if(uiState.value.password == uiState.value.passwordRepeat) {
             var registerStatus: String = ""
             viewModelScope.launch {
-                registerStatus = userRepository.createUser(RegisterData(
-                    empNumber = uiState.value.employeeNumber.toInt(),
-                    nickname = uiState.value.name,
-                    password = uiState.value.password
-                )).message
+                try {
+                    registerStatus = userRepository.createUser(RegisterData(
+                        empNumber = uiState.value.employeeNumber.toInt(),
+                        nickname = uiState.value.name,
+                        password = uiState.value.password
+                    )).message
+                } catch(e: Exception) {
+
+                }
+
                 Log.d(TAG, "registerStatus: $registerStatus")
                 if(registerStatus == "User created successfully.") {
                     openAndPopUp("LoginScreen")

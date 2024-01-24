@@ -4,7 +4,7 @@ import com.kb.cbt.model.service.AccountService
 import com.kb.cbt.model.service.ApiService
 import com.kb.cbt.model.service.StorageService
 import com.kb.cbt.model.service.impl.AccountServiceImpl
-import com.kb.cbt.model.service.impl.StorageServiceImpl
+//import com.kb.cbt.model.service.impl.StorageServiceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -20,8 +20,8 @@ abstract class ServiceModule {
     @Binds
     abstract fun provideAccountService(impl: AccountServiceImpl): AccountService
 
-    @Binds
-    abstract fun provideStorageService(impl: StorageServiceImpl): StorageService
+//    @Binds
+//    abstract fun provideStorageService(impl: StorageServiceImpl): StorageService
 
 //    @Provides
 //    @Singleton

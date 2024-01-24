@@ -1,15 +1,31 @@
 package com.kb.cbt
 
 import android.content.res.Resources
+import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Stable
 import androidx.navigation.NavHostController
+import com.kb.cbt.composable.snackbar.SnackbarManager
+import com.kb.cbt.composable.snackbar.SnackbarMessage.Companion.toMessage
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 
 @Stable
 class MyAppState(
+    val scaffoldState: ScaffoldState,
     val navController: NavHostController,
+    val snackbarManager: SnackbarManager,
+    private val resources: Resources,
+    coroutineScope: CoroutineScope
 ) {
+    init {
+        coroutineScope.launch {
+            snackbarManager.snackbarMessages.filterNotNull().collect { snackbarMessage ->
+                val text = snackbarMessage.toMessage(resources)
+                scaffoldState.snackbarHostState.showSnackbar(text)
+            }
+        }
+    }
 
     fun popUp() {
         navController.popBackStack()

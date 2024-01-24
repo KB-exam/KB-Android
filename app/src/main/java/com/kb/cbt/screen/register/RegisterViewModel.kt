@@ -1,6 +1,10 @@
 package com.kb.cbt.screen.register
 
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -10,6 +14,7 @@ import com.kb.cbt.screen.login.LoginUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.coroutineContext
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
@@ -30,7 +35,7 @@ class RegisterViewModel @Inject constructor(
     private val passwordRepeat
         get() = uiState.value.passwordRepeat
 
-    fun onEmployeeNumberChange(newValue: Int) {
+    fun onEmployeeNumberChange(newValue: String) {
         uiState.value = uiState.value.copy(employeeNumber = newValue)
     }
 
@@ -46,15 +51,19 @@ class RegisterViewModel @Inject constructor(
         uiState.value = uiState.value.copy(passwordRepeat = newValue)
     }
 
-    fun onClickRegister() {
+    fun onClickRegister(openAndPopUp: (String) -> Unit) {
         if(uiState.value.password == uiState.value.passwordRepeat) {
             viewModelScope.launch {
                 userRepository.createUser(RegisterData(
-                    employeeNumber = uiState.value.employeeNumber,
+                    employeeNumber = uiState.value.employeeNumber.toInt(),
                     name = uiState.value.name,
                     password = uiState.value.password
                 ))
             }
+            openAndPopUp("LoginScreen")
+
+        } else {
+
         }
     }
 

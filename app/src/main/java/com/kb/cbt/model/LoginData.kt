@@ -1,5 +1,6 @@
 package com.kb.cbt.model
 
 data class LoginData(
-    val 
+    val employeeNumber: Int,
+    val password: String
 )

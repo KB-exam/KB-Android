@@ -23,18 +23,18 @@ abstract class ServiceModule {
     @Binds
     abstract fun provideStorageService(impl: StorageServiceImpl): StorageService
 
-    @Provides
-    @Singleton
-    fun provideRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl("https://port-0-kb-backend-f9ohr2alrqzna2e.sel5.cloudtype.app/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiService {
-        return retrofit.create(ApiService::class.java)
-    }
+//    @Provides
+//    @Singleton
+//    fun provideRetrofit(): Retrofit {
+//        return Retrofit.Builder()
+//            .baseUrl("https://port-0-kb-backend-f9ohr2alrqzna2e.sel5.cloudtype.app/")
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .build()
+//    }
+//
+//    @Provides
+//    @Singleton
+//    fun provideApiService(retrofit: Retrofit): ApiService {
+//        return retrofit.create(ApiService::class.java)
+//    }
 }

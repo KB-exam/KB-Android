@@ -1,8 +1,11 @@
 package com.kb.cbt.screen.register
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -36,7 +39,9 @@ class RegisterViewModel @Inject constructor(
         get() = uiState.value.passwordRepeat
 
     fun onEmployeeNumberChange(newValue: String) {
-        uiState.value = uiState.value.copy(employeeNumber = newValue)
+        if(newValue.isDigitsOnly()) {
+            uiState.value = uiState.value.copy(employeeNumber = newValue)
+        }
     }
 
     fun onNameChange(newValue: String) {
@@ -53,14 +58,19 @@ class RegisterViewModel @Inject constructor(
 
     fun onClickRegister(openAndPopUp: (String) -> Unit) {
         if(uiState.value.password == uiState.value.passwordRepeat) {
+            var registerStatus: String = ""
             viewModelScope.launch {
-                userRepository.createUser(RegisterData(
-                    employeeNumber = uiState.value.employeeNumber.toInt(),
-                    name = uiState.value.name,
+                registerStatus = userRepository.createUser(RegisterData(
+                    empNumber = uiState.value.employeeNumber.toInt(),
+                    nickname = uiState.value.name,
                     password = uiState.value.password
-                ))
+                )).message
+                Log.d(TAG, "registerStatus: $registerStatus")
+                if(registerStatus == "User created successfully.") {
+                    openAndPopUp("LoginScreen")
+                }
             }
-            openAndPopUp("LoginScreen")
+
 
         } else {
 

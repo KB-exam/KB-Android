@@ -192,7 +192,7 @@ fun QuizScreen(
 
         AlertDialog(
             onDismissRequest = onDismissRequest,
-            modifier = Modifier.width(84.dp)
+            modifier = Modifier.fillMaxWidth(0.6f)
         ) {
             Surface(
                 shape = RoundedCornerShape(12.dp),
@@ -201,6 +201,7 @@ fun QuizScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(8.dp)
                 ) {
 
                     H3Content(

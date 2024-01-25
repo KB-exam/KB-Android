@@ -20,15 +20,33 @@ class QuizViewModel @Inject constructor(
 
 
     var quizListStorage: List<Quiz> = listOf()
+    var currentQuiz: Int = 0
+    var maxQuiz: Int = 5
 
 
     fun printQuiz(callback: (List<Quiz>) -> Unit) {
         viewModelScope.launch {
             quizListStorage = userRepository.getExam(QuizLenData(
                 accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXJhbSI6WzEwMF0sImlhdCI6MTcwNjEwOTY4NCwiZXhwIjoxNzA2NTQxNjg0LCJpc3MiOiJkb2duZG9uZyJ9.lXK05PjSzgsYfNtS_p8q5-6jQprUmHDr_cxxdiAQU-k",
-                quantity = 5,
+                quantity = maxQuiz,
             ))
             callback(quizListStorage)
+        }
+    }
+
+    fun compareQuiz(input: String, answer: String):Int {
+        return if(input == answer) {
+            1
+        } else {
+            0
+        }
+    }
+
+    fun nextQuiz() {
+        if(maxQuiz > currentQuiz) {
+            currentQuiz++
+        } else {
+
         }
     }
 }

@@ -17,6 +17,7 @@ import com.kb.cbt.composable.BackOnPressed
 
 @Composable
 fun HomeScreen(
+    openAndPopUp: (String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     BackOnPressed()
@@ -29,7 +30,7 @@ fun HomeScreen(
                 .align(Alignment.BottomEnd)
                 .padding(bottom = 80.dp, end = 12.dp),
             onClick = {
-
+                viewModel.onClickAdd(openAndPopUp)
             }) {
             Icon(painter = painterResource(id = R.drawable.ic_add), contentDescription = "")
         }

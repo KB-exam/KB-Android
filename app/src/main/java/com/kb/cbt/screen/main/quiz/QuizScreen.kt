@@ -3,6 +3,7 @@ package com.kb.cbt.screen.main.quiz
 import android.content.ContentValues.TAG
 import android.graphics.Paint.Align
 import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -53,17 +54,25 @@ fun QuizScreen(
     val quizList = remember { mutableStateOf<List<Quiz>>(mutableListOf()) }
     val quizState = remember { mutableStateOf(false) }
     val alertState = remember { mutableStateOf(false) }
+    val finishAlertState = remember { mutableStateOf(false) }
 
     val selectedValue = remember { mutableStateOf("") }
+    val sfState = remember { mutableStateOf(Pair<Int, Int>(0, 0)) }
 
     val isSelectedItem: (String) -> Boolean = { selectedValue.value == it }
     val onChangeState: (String) -> Unit = { selectedValue.value = it }
 
     LaunchedEffect(Unit) {
+        viewModel.currentQuiz = 0
+        sfState.value = Pair(0, 0)
         viewModel.printQuiz {
-            quizList.value = it
-            Log.d(TAG, "quizList: ${quizList.value}")
-            quizState.value = true
+            if(it.isEmpty()) {
+
+            } else {
+                quizList.value = it
+                Log.d(TAG, "quizList: ${quizList.value}")
+                quizState.value = true
+            }
         }
     }
 
@@ -77,10 +86,10 @@ fun QuizScreen(
 
         Column(modifier = Modifier.fillMaxWidth()) {
             if (quizState.value) {
-                H1Title(text = quizList.value[0].title)
+                H1Title(text = quizList.value[viewModel.currentQuiz].title)
                 H2Title(
                     modifier = Modifier.padding(top = 8.dp),
-                    text = quizList.value[0].content
+                    text = quizList.value[viewModel.currentQuiz].content ?: ""
                 )
             }
         }
@@ -98,19 +107,19 @@ fun QuizScreen(
 
 
         if (quizState.value) {
-            if (quizList.value[0].type == 4) {
+            if (quizList.value[viewModel.currentQuiz].type == 4) {
                 val items = listOf(
-                    quizList.value[0].choice1 ?: "1",
-                    quizList.value[0].choice2 ?: "2",
-                    quizList.value[0].choice3 ?: "3",
-                    quizList.value[0].choice4 ?: "4",
+                    "1)" + quizList.value[viewModel.currentQuiz].choice1 ?: "1.",
+                    "2)" + quizList.value[viewModel.currentQuiz].choice2 ?: "2.",
+                    "3)" + quizList.value[viewModel.currentQuiz].choice3 ?: "3.",
+                    "4)" + quizList.value[viewModel.currentQuiz].choice4 ?: "4.",
                 )
                 Column(
                     modifier = Modifier
                         .align(Alignment.BottomStart)
                         .padding(bottom = 116.dp)
                 ) {
-                    Text(text = "Selected value: ${selectedValue.value.ifEmpty { "NONE" }}")
+                    //Text(text = "Selected value: ${selectedValue.value.ifEmpty { "NONE" }}")
                     items.forEach { item ->
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -143,7 +152,7 @@ fun QuizScreen(
                         .align(Alignment.BottomStart)
                         .padding(bottom = 116.dp)
                 ) {
-                    Text(text = "Selected value: ${selectedValue.value.ifEmpty { "NONE" }}")
+                    //Text(text = "Selected value: ${selectedValue.value.ifEmpty { "NONE" }}")
                     items.forEach { item ->
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -185,6 +194,31 @@ fun QuizScreen(
 //
 //        }
     }
+    if(finishAlertState.value) {
+        val onDismissRequest = {
+            openAndPopUp("MainScreen")
+            finishAlertState.value = false
+        }
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            modifier = Modifier.fillMaxWidth(0.6f)
+        ) {
+            Surface(
+                shape = RoundedCornerShape(12.dp),
+                tonalElevation = AlertDialogDefaults.TonalElevation
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                ) {
+                    H1Title(text = "완료")
+                    H2Title(modifier = Modifier.padding(top = 12.dp), text = "정답: ${sfState.value.first}, 오답: ${sfState.value.second}" )
+                }
+            }
+        }
+    }
+    
     if (alertState.value) {
         val onDismissRequest = {
             alertState.value = false
@@ -203,17 +237,41 @@ fun QuizScreen(
                         .fillMaxWidth()
                         .padding(8.dp)
                 ) {
-
                     H3Content(
                         text = if(viewModel.compareQuiz(
-                            selectedValue.value,
-                            quizList.value[0].answer ?: "nan"
+                            selectedValue.value.split(")")[0],
+                            quizList.value[viewModel.currentQuiz].answer ?: "nan"
                         ) == 1) "정답입니다."
                         else "오답입니다."
                     )
-                    BasicButton(text = "닫기") {
-                        onDismissRequest()
+                    if(viewModel.compareQuiz(
+                            selectedValue.value.split(")")[0],
+                            quizList.value[viewModel.currentQuiz].answer ?: "nan"
+                        ) == 1) {
+                        BasicButton(text = "다음문제로") {
+                            viewModel.nextQuiz() { s, f ->
+                                sfState.value = Pair(s, f)
+                                finishAlertState.value = true
+                            }
+                            viewModel.success()
+                            onDismissRequest()
+                        }
+                    } else {
+                        Row(horizontalArrangement = Arrangement.SpaceBetween) {
+//                            BasicButton(text = "다시하기") {
+//                                onDismissRequest()
+//                            }
+                            BasicButton(text = "다음문제로") {
+                                viewModel.nextQuiz() { s, f ->
+                                    sfState.value = Pair(s, f)
+                                    finishAlertState.value = true
+                                }
+                                viewModel.fail()
+                                onDismissRequest()
+                            }
+                        }
                     }
+
                 }
             }
         }

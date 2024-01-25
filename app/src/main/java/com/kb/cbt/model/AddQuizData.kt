@@ -1,7 +1,7 @@
 package com.kb.cbt.model
 
-data class Quiz(
-    val questionId: Int,
+data class AddQuizData(
+    val accessToken: String,
     val title: String = "",
     val content: String? = "",
     val type: Int?,
@@ -10,6 +10,5 @@ data class Quiz(
     val choice3: String?,
     val choice4: String?,
     val answer: String?,
-    val empNumber: Int?,
     val category: String?,
 )

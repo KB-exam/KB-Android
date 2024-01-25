@@ -31,6 +31,7 @@ import com.kb.cbt.screen.main.MainScreen
 import com.kb.cbt.screen.main.home.HomeScreen
 import com.kb.cbt.screen.main.info.InfoScreen
 import com.kb.cbt.screen.main.quiz.QuizScreen
+import com.kb.cbt.screen.main.quiz.add.QuizAddScreen
 import com.kb.cbt.screen.register.RegisterScreen
 import com.kb.cbt.screen.splash.SplashScreen
 import com.kb.cbt.ui.theme.Kb_androidTheme
@@ -38,7 +39,7 @@ import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun MyApp() {
-    Kb_androidTheme {
+    Kb_androidTheme(darkTheme = false) {
         Box(
             modifier = Modifier
                 .background(MaterialTheme.colors.background)
@@ -101,6 +102,15 @@ fun NavGraphBuilder.navGraph(appState: MyAppState) {
         MainScreen(openAndPopUp = { route -> appState.clearAndNavigate(route) })
     }
 
+    composable("QuizAddScreen") {
+        QuizAddScreen(openAndPopUp = { route -> appState.navigate(route) })
+    }
+
+    composable("HomeScreen") {
+        HomeScreen(openAndPopUp = { route -> appState.navigate(route) })
+    }
+
+
     composable(
         route = BottomNavItem.Quiz.screen_route,
     ) {
@@ -109,7 +119,7 @@ fun NavGraphBuilder.navGraph(appState: MyAppState) {
     composable(
         route = BottomNavItem.Home.screen_route,
     ) {
-        HomeScreen()
+        HomeScreen(openAndPopUp = { route -> appState.navigate(route) })
     }
     composable(
         route = BottomNavItem.Info.screen_route,

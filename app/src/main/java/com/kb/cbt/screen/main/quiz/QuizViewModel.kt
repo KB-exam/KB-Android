@@ -1,12 +1,9 @@
 package com.kb.cbt.screen.main.quiz
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kb.cbt.model.Quiz
 import com.kb.cbt.model.QuizLenData
-import com.kb.cbt.model.service.StorageService
 import com.kb.cbt.repo.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -21,16 +18,32 @@ class QuizViewModel @Inject constructor(
 
     var quizListStorage: List<Quiz> = listOf()
     var currentQuiz: Int = 0
-    var maxQuiz: Int = 5
+    var maxQuiz: Int = 11
+    var quizAmount: Int = 0
+    var success: Int = 0
+    var fail: Int = 0
 
 
     fun printQuiz(callback: (List<Quiz>) -> Unit) {
         viewModelScope.launch {
-            quizListStorage = userRepository.getExam(QuizLenData(
-                accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXJhbSI6WzEwMF0sImlhdCI6MTcwNjEwOTY4NCwiZXhwIjoxNzA2NTQxNjg0LCJpc3MiOiJkb2duZG9uZyJ9.lXK05PjSzgsYfNtS_p8q5-6jQprUmHDr_cxxdiAQU-k",
-                quantity = maxQuiz,
-            ))
-            callback(quizListStorage)
+            try {
+                val accessToken =
+                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXJhbSI6WzM5MDIyNzRdLCJpYXQiOjE3MDYxOTUzNDksImV4cCI6MTcwNjYyNzM0OSwiaXNzIjoiZG9nbmRvbmcifQ.GJmtrYEIbkCYr_yVmfDBiE-mOD0zgYjg5vwaIB8-exA"
+//                val allQuestion = userRepository.allQuestion(accessToken).body()?.message ?: 0
+//
+//                //quizAmount = allQuestion.body().message!!
+//
+//                Log.d("TAG", "allQuestion: $allQuestion")
+
+                quizListStorage = userRepository.getExam(QuizLenData(
+                    accessToken = accessToken,
+                    quantity = 11,
+                ))
+                callback(quizListStorage)
+
+            } catch(e: Exception) {
+
+            }
         }
     }
 
@@ -42,11 +55,19 @@ class QuizViewModel @Inject constructor(
         }
     }
 
-    fun nextQuiz() {
-        if(maxQuiz > currentQuiz) {
+    fun nextQuiz(finish: (Int, Int) -> Unit) {
+        if(maxQuiz > currentQuiz + 1) {
             currentQuiz++
         } else {
-
+            finish(success, fail)
         }
+    }
+
+    fun success() {
+        success++
+    }
+
+    fun fail() {
+        fail++
     }
 }

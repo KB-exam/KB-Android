@@ -11,5 +11,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
 
 ): ViewModel() {
-
+    fun onClickAdd(openAndPopUp : (String) -> Unit) {
+        openAndPopUp("QuizAddScreen")
+    }
 }

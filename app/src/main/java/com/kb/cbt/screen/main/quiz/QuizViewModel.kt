@@ -21,19 +21,14 @@ class QuizViewModel @Inject constructor(
 
     var quizListStorage: List<Quiz> = listOf()
 
-    init {
+
+    fun printQuiz(callback: (List<Quiz>) -> Unit) {
         viewModelScope.launch {
             quizListStorage = userRepository.getExam(QuizLenData(
                 accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXJhbSI6WzEwMF0sImlhdCI6MTcwNjEwOTY4NCwiZXhwIjoxNzA2NTQxNjg0LCJpc3MiOiJkb2duZG9uZyJ9.lXK05PjSzgsYfNtS_p8q5-6jQprUmHDr_cxxdiAQU-k",
                 quantity = 5,
             ))
+            callback(quizListStorage)
         }
-
-    }
-
-    fun printQuiz():List<Quiz> {
-
-        Log.d(TAG, "quizList: $quizListStorage")
-        return quizListStorage
     }
 }
